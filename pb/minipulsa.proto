@@ -1,0 +1,134 @@
+syntax = "proto3";
+
+package minipulsa;
+option go_package = "./minipulsa";
+
+message Empty {}
+message BasicResponseCodeMessage {
+  int64 code = 1;
+  string message = 2;
+}
+
+// authentication service
+service AuthenticationService {
+  rpc LoginRegister(LoginRegisterRequest) returns (LoginRegisterResponse) {};
+  rpc ValidateToken(ValidateTokenRequest) returns (BasicResponseCodeMessage) {};
+}
+
+message LoginRegisterRequest {
+  string email = 1;
+  string password = 2;
+}
+
+message LoginRegisterResponse {
+  int64 code = 1;
+  string message = 2;
+  string token = 3;
+  int64 user_id = 4;
+}
+
+message ValidateTokenRequest { string token = 1; }
+
+// product service
+service ProductService {
+  rpc GetProducts(Empty) returns (GetProductsResponse) {};
+  rpc GetProduct(GetProductRequest) returns (GetProductResponse) {};
+}
+
+message Product {
+  int64 product_id = 1;
+  int64 price = 2;
+  string name = 3;
+}
+
+message GetProductsResponse {
+  int64 code = 1;
+  string message = 2;
+  repeated Product products = 3;
+}
+
+message GetProductRequest { int64 product_id = 1; }
+
+message GetProductResponse {
+  int64 code = 1;
+  string message = 2;
+  Product product = 3;
+}
+
+// Order service
+service OrderService {
+  rpc GetOrders(Empty) returns (GetOrdersResponse) {};
+  rpc GetOrder(GetOrderRequest) returns (GetOrderResponse) {};
+  rpc CreateOrder(CreateOrderRequest) returns (BasicResponseCodeMessage) {};
+}
+
+message Order {
+  int64 order_id = 1;
+  int64 product_id = 2;
+  int64 user_id = 3;
+  string status = 4;
+  string date = 5;
+}
+
+message HistoryOrder {
+  int64 order_id = 1;
+  string status = 4;
+  string date = 5;
+}
+
+message GetOrdersRequest { int64 user_id = 1; }
+
+message GetOrdersResponse {
+  int64 code = 1;
+  string message = 2;
+  repeated Order orders = 3;
+}
+
+message GetOrderRequest { int64 order_id = 1; }
+
+message GetOrderResponse {
+  int64 code = 1;
+  string message = 2;
+  Order order = 3;
+  repeated HistoryOrder history_order = 4;
+}
+
+message CreateOrderRequest {
+  int64 order_id = 1;
+  int64 product_id = 2;
+  int64 user_id = 3;
+}
+
+// Wallet service
+service WalletService {
+  rpc GetWalletDetail(GetWalletDetailRequest)
+      returns (GetWalletDetailResponse) {};
+  rpc UseWallet(UseWalletRequest) returns (BasicResponseCodeMessage) {};
+}
+
+message Wallet {
+  int64 wallet_id = 1;
+  int64 user_id = 2;
+  int64 amount = 3;
+  string date = 4;
+}
+
+message HistoryWallet {
+  int64 wallet_id = 1;
+  int64 amount = 2;
+  string date = 3;
+}
+
+message UseWalletRequest {
+  int64 user_id = 1;
+  int64 amount = 2;
+}
+
+message GetWalletDetailRequest { int64 user_id = 1; }
+
+message GetWalletDetailResponse {
+  int64 code = 1;
+  string message = 2;
+  Wallet wallet = 3;
+  repeated HistoryWallet history_wallet = 4;
+}

@@ -1,0 +1,1 @@
+DROP FUNCTION IF EXISTS insert_or_update_wallet() CASCADE;
