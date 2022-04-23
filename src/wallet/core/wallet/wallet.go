@@ -15,6 +15,6 @@ type (
 		GetWalletByUserID(ctx context.Context, userID int64) (*entity.DBWallet, error)
 		UpdateWalletByUserID(ctx context.Context, amount int64, userID int64) error
 		InsertWallet(ctx context.Context, amount int64, userID int64) error
-		GetWalletHistories(ctx context.Context, userID int64) error
+		GetWalletHistories(ctx context.Context, userID int64) (*[]entity.DBWalletHistories, error)
 	}
 )

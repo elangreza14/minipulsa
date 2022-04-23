@@ -37,7 +37,7 @@ const (
 
 	getWalletHistories = `
 		SELECT
-			wh."amount",
+			wh."last_amount",
 			wh."date"
 		FROM
 			"wallets" AS w 
@@ -46,7 +46,8 @@ const (
 		ON  
 			w.wallet_id = wh.wallet_id
 		WHERE
-			user_id = $1;
+			user_id = $1 
+		ORDER BY "date" DESC;
 	`
 )
 
@@ -84,11 +85,24 @@ func (q *Queries) InsertWallet(ctx context.Context, amount int64, userID int64) 
 	return nil
 }
 
-func (q *Queries) GetWalletHistories(ctx context.Context, userID int64) error {
-	_, err := q.db.ExecContext(ctx, getWalletHistories, userID)
+func (q *Queries) GetWalletHistories(ctx context.Context, userID int64) (*[]entity.DBWalletHistories, error) {
+	rows, err := q.db.QueryContext(ctx, getWalletHistories, userID)
 	if err != nil {
-		return err
+		return nil, err
+	}
+	defer rows.Close()
+
+	items := []entity.DBWalletHistories{}
+	for rows.Next() {
+		var i entity.DBWalletHistories
+		if err := rows.Scan(
+			&i.LastAmount,
+			&i.Date,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
 	}
 
-	return nil
+	return &items, nil
 }
