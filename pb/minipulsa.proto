@@ -18,8 +18,8 @@ message LoginRegisterRequest {
 }
 
 message LoginRegisterResponse {
-  string token = 3;
-  int64 user_id = 4;
+  string token = 1;
+  int64 user_id = 2;
 }
 
 message ValidateTokenRequest {
@@ -41,15 +41,11 @@ message Product {
   string name = 3;
 }
 
-message GetProductsResponse {
-  int64 code = 1;
-  string message = 2;
-  repeated Product products = 3;
-}
+message GetProductsResponse { repeated Product products = 1; }
 
 message GetProductRequest { int64 product_id = 1; }
 
-message GetProductResponse { Product product = 3; }
+message GetProductResponse { Product product = 1; }
 
 // Order service
 service OrderService {
@@ -62,25 +58,27 @@ message Order {
   int64 order_id = 1;
   int64 product_id = 2;
   int64 user_id = 3;
-  string status = 4;
-  string date = 5;
+  int64 wallet_history_id = 4;
+  string status = 5;
+  string date = 6;
 }
 
 message HistoryOrder {
   int64 order_id = 1;
-  string status = 4;
-  string date = 5;
+  int64 wallet_history_id = 2;
+  string status = 3;
+  string date = 4;
 }
 
 message GetOrdersRequest { int64 user_id = 1; }
 
-message GetOrdersResponse { repeated Order orders = 3; }
+message GetOrdersResponse { repeated Order orders = 1; }
 
 message GetOrderRequest { int64 order_id = 1; }
 
 message GetOrderResponse {
-  Order order = 3;
-  repeated HistoryOrder history_order = 4;
+  Order order = 1;
+  repeated HistoryOrder history_order = 2;
 }
 
 message CreateOrderRequest {
@@ -117,6 +115,6 @@ message UseWalletRequest {
 message GetWalletDetailRequest { int64 user_id = 1; }
 
 message GetWalletDetailResponse {
-  Wallet wallet = 3;
-  repeated HistoryWallet history_wallet = 4;
+  Wallet wallet = 1;
+  repeated HistoryWallet history_wallet = 2;
 }
