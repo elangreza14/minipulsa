@@ -4,15 +4,12 @@ package minipulsa;
 option go_package = "./minipulsa";
 
 message Empty {}
-message BasicResponseCodeMessage {
-  int64 code = 1;
-  string message = 2;
-}
+message BasicResponseCodeMessage { string message = 2; }
 
 // authentication service
 service AuthenticationService {
   rpc LoginRegister(LoginRegisterRequest) returns (LoginRegisterResponse) {};
-  rpc ValidateToken(ValidateTokenRequest) returns (BasicResponseCodeMessage) {};
+  rpc ValidateToken(ValidateTokenRequest) returns (ValidateTokenResponse) {};
 }
 
 message LoginRegisterRequest {
@@ -21,13 +18,16 @@ message LoginRegisterRequest {
 }
 
 message LoginRegisterResponse {
-  int64 code = 1;
-  string message = 2;
   string token = 3;
   int64 user_id = 4;
 }
 
-message ValidateTokenRequest { string token = 1; }
+message ValidateTokenRequest {
+  string token = 1;
+  int64 user_id = 2;
+}
+
+message ValidateTokenResponse { int64 user_id = 1; }
 
 // product service
 service ProductService {
@@ -49,11 +49,7 @@ message GetProductsResponse {
 
 message GetProductRequest { int64 product_id = 1; }
 
-message GetProductResponse {
-  int64 code = 1;
-  string message = 2;
-  Product product = 3;
-}
+message GetProductResponse { Product product = 3; }
 
 // Order service
 service OrderService {
@@ -78,17 +74,11 @@ message HistoryOrder {
 
 message GetOrdersRequest { int64 user_id = 1; }
 
-message GetOrdersResponse {
-  int64 code = 1;
-  string message = 2;
-  repeated Order orders = 3;
-}
+message GetOrdersResponse { repeated Order orders = 3; }
 
 message GetOrderRequest { int64 order_id = 1; }
 
 message GetOrderResponse {
-  int64 code = 1;
-  string message = 2;
   Order order = 3;
   repeated HistoryOrder history_order = 4;
 }
@@ -127,8 +117,6 @@ message UseWalletRequest {
 message GetWalletDetailRequest { int64 user_id = 1; }
 
 message GetWalletDetailResponse {
-  int64 code = 1;
-  string message = 2;
   Wallet wallet = 3;
   repeated HistoryWallet history_wallet = 4;
 }

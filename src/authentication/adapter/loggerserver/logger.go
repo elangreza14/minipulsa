@@ -15,6 +15,8 @@ func NewLogger() *logrus.Entry {
 	logrus.SetFormatter(formatter)
 	logrus.SetOutput(os.Stdout)
 	logrus.SetLevel(logrus.InfoLevel)
+	logrus.SetReportCaller(true)
 
-	return logrus.WithFields(logrus.Fields{})
+	// return logrus.WithFields(logrus.Fields{})
+	return logrus.WithField("service", "authentication")
 }

@@ -19,7 +19,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AuthenticationServiceClient interface {
 	LoginRegister(ctx context.Context, in *LoginRegisterRequest, opts ...grpc.CallOption) (*LoginRegisterResponse, error)
-	ValidateToken(ctx context.Context, in *ValidateTokenRequest, opts ...grpc.CallOption) (*BasicResponseCodeMessage, error)
+	ValidateToken(ctx context.Context, in *ValidateTokenRequest, opts ...grpc.CallOption) (*ValidateTokenResponse, error)
 }
 
 type authenticationServiceClient struct {
@@ -39,8 +39,8 @@ func (c *authenticationServiceClient) LoginRegister(ctx context.Context, in *Log
 	return out, nil
 }
 
-func (c *authenticationServiceClient) ValidateToken(ctx context.Context, in *ValidateTokenRequest, opts ...grpc.CallOption) (*BasicResponseCodeMessage, error) {
-	out := new(BasicResponseCodeMessage)
+func (c *authenticationServiceClient) ValidateToken(ctx context.Context, in *ValidateTokenRequest, opts ...grpc.CallOption) (*ValidateTokenResponse, error) {
+	out := new(ValidateTokenResponse)
 	err := c.cc.Invoke(ctx, "/minipulsa.AuthenticationService/ValidateToken", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -53,7 +53,7 @@ func (c *authenticationServiceClient) ValidateToken(ctx context.Context, in *Val
 // for forward compatibility
 type AuthenticationServiceServer interface {
 	LoginRegister(context.Context, *LoginRegisterRequest) (*LoginRegisterResponse, error)
-	ValidateToken(context.Context, *ValidateTokenRequest) (*BasicResponseCodeMessage, error)
+	ValidateToken(context.Context, *ValidateTokenRequest) (*ValidateTokenResponse, error)
 	mustEmbedUnimplementedAuthenticationServiceServer()
 }
 
@@ -64,7 +64,7 @@ type UnimplementedAuthenticationServiceServer struct {
 func (UnimplementedAuthenticationServiceServer) LoginRegister(context.Context, *LoginRegisterRequest) (*LoginRegisterResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method LoginRegister not implemented")
 }
-func (UnimplementedAuthenticationServiceServer) ValidateToken(context.Context, *ValidateTokenRequest) (*BasicResponseCodeMessage, error) {
+func (UnimplementedAuthenticationServiceServer) ValidateToken(context.Context, *ValidateTokenRequest) (*ValidateTokenResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ValidateToken not implemented")
 }
 func (UnimplementedAuthenticationServiceServer) mustEmbedUnimplementedAuthenticationServiceServer() {}
