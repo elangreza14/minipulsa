@@ -10,9 +10,6 @@ test:
 run-dev:
 	go run main.go
 
-mock:
-	mockgen -package mockdb -destination db/mock/store.go github.com/techschool/simplebank/db/sqlc Store
-
 proto:
 	protoc --proto_path=../../pb --go_out=./adapter/grpc/minipulsa --go_opt=paths=source_relative \
 	--go-grpc_out=./adapter/grpc/minipulsa --go-grpc_opt=paths=source_relative \
@@ -21,4 +18,4 @@ proto:
 update-mock:
 	./mock/mocks-script.sh
 
-.PHONY: migrate test run-dev mock proto update-mock
+.PHONY: migrate test run-dev proto update-mock
