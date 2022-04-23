@@ -37,6 +37,18 @@ const (
 		WHERE
 			user_id = $1
 	`
+
+	getByEmail = `
+		SELECT
+			user_id,
+			email,
+			password, 
+			token 
+		FROM
+			users 
+		WHERE
+			email = $1
+	`
 )
 
 // InsertUser query for inseting one records
@@ -61,6 +73,14 @@ func (q *Queries) UpdateUser(ctx context.Context, req entity.ReqPostPutUser, use
 func (q *Queries) GetUser(ctx context.Context, userID int64) (*entity.DBUser, error) {
 	var res entity.DBUser
 	if err := q.db.QueryRowContext(ctx, getUser, userID).Scan(&res.UserID, &res.Email, &res.Password, &res.Token); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
+
+func (q *Queries) GetUserByEmail(ctx context.Context, email string) (*entity.DBUser, error) {
+	var res entity.DBUser
+	if err := q.db.QueryRowContext(ctx, getByEmail, email).Scan(&res.UserID, &res.Email, &res.Password, &res.Token); err != nil {
 		return nil, err
 	}
 	return &res, nil

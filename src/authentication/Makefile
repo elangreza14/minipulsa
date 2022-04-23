@@ -14,8 +14,8 @@ mock:
 	mockgen -package mockdb -destination db/mock/store.go github.com/techschool/simplebank/db/sqlc Store
 
 proto:
-	protoc --proto_path=../../pb --go_out=./adapter/grpc --go_opt=paths=source_relative \
-	--go-grpc_out=./adapter/grpc --go-grpc_opt=paths=source_relative \
+	protoc --proto_path=../../pb --go_out=./adapter/grpc/minipulsa --go_opt=paths=source_relative \
+	--go-grpc_out=./adapter/grpc/minipulsa --go-grpc_opt=paths=source_relative \
 	../../pb/*.proto
 
 update-mock:

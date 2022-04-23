@@ -56,3 +56,21 @@ func TestQueries_GetUser(t *testing.T) {
 	require.NotEmpty(t, resp)
 	require.Equal(t, resp, compare)
 }
+
+func TestQueries_GetUserByEmail(t *testing.T) {
+	email := util.RandomEmail()
+	arg := entity.ReqPostPutUser{
+		Email:    email,
+		Password: util.RandomString(10),
+		Token:    util.RandomString(10),
+	}
+	res, err := testQueries.InsertUser(context.Background(), arg)
+	require.NoError(t, err)
+	require.NotNil(t, res)
+
+	resp, err := testQueries.GetUserByEmail(context.Background(), email)
+
+	require.NoError(t, err)
+	require.NotEmpty(t, resp)
+	require.Equal(t, resp.Email, email)
+}

@@ -28,21 +28,15 @@ func NewJWTMaker(secret_key string,
 	}, nil
 }
 
-// CreateToken creates a new token for a specific phone and duration
-func (maker *JWTMaker) CreateToken(phone string) (*Payload, string, error) {
-	payload, err := NewPayload(phone, maker.duration)
+// CreateToken creates a new token for a specific email and duration
+func (maker *JWTMaker) CreateToken(email string) (string, error) {
+	payload, err := NewPayload(email, maker.duration)
 	if err != nil {
-		return nil, "", err
+		return "", err
 	}
 
-	jwtBased := jwt.NewWithClaims(jwt.SigningMethodHS256, payload)
-
-	jwtToken, err := jwtBased.SignedString([]byte(maker.secretKey))
-	if err != nil {
-		return nil, "", err
-	}
-
-	return payload, jwtToken, nil
+	jwtToken := jwt.NewWithClaims(jwt.SigningMethodHS256, payload)
+	return jwtToken.SignedString([]byte(maker.secretKey))
 }
 
 // VerifyToken checks if the token is valid or not

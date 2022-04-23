@@ -1,16 +1,13 @@
 package user
 
 import (
-	"context"
-
-	"github.com/elangreza14/minipulsa/authentication/entity"
 	"github.com/sirupsen/logrus"
 )
 
 // UserService is service layer that handle interaction between core and adapter
 type UserService interface {
-	LoginRegisterUser(ctx context.Context, arg entity.ReqPostPutUser) (*int64, error)
-	ValidateUser(ctx context.Context, token string) error
+	// LoginRegister(context.Context, *grpc.LoginRegisterRequest) (*grpc.LoginRegisterResponse, error)
+	// ValidateToken(context.Context, *grpc.ValidateTokenRequest) (*grpc.BasicResponseCodeMessage, error)
 }
 
 type userService struct {
@@ -28,14 +25,10 @@ func NewUserService(UserRepo UserRepository,
 	}
 }
 
-// AddUser is adding user method
-func (ws *userService) LoginRegisterUser(ctx context.Context, arg entity.ReqPostPutUser) (*int64, error) {
+// func (us *userService) LoginRegister(context.Context, *grpc.LoginRegisterRequest) (*grpc.LoginRegisterResponse, error) {
+// 	return nil, nil
+// }
 
-	return nil, nil
-}
-
-// ValidateUser is update user that already exist
-func (ws *userService) ValidateUser(ctx context.Context, token string) error {
-
-	return nil
-}
+// func (us *userService) ValidateToken(context.Context, *grpc.ValidateTokenRequest) (*grpc.BasicResponseCodeMessage, error) {
+// 	return nil, nil
+// }

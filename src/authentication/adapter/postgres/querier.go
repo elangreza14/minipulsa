@@ -17,6 +17,7 @@ type (
 		InsertUser(ctx context.Context, req entity.ReqPostPutUser) (*int64, error)
 		UpdateUser(ctx context.Context, req entity.ReqPostPutUser, userID int64) error
 		GetUser(ctx context.Context, userID int64) (*entity.DBUser, error)
+		GetUserByEmail(ctx context.Context, email string) (*entity.DBUser, error)
 	}
 
 	// we can also create another repository like logic here
