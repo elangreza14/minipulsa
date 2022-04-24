@@ -10,7 +10,7 @@ import (
 
 // WalletService is service layer that handle interaction between core and adapter
 type WalletService interface {
-	UseWallet(ctx context.Context, req entity.ReqUseWallet) error
+	UseWallet(ctx context.Context, req entity.ReqUseWallet) (*int64, error)
 	GetWalletDetail(ctx context.Context, userId int64) (*entity.GetDetailWallet, error)
 }
 
@@ -29,25 +29,30 @@ func NewWalletService(WalletRepo WalletRepository,
 	}
 }
 
-func (ws *walletService) UseWallet(ctx context.Context, req entity.ReqUseWallet) error {
+func (ws *walletService) UseWallet(ctx context.Context, req entity.ReqUseWallet) (*int64, error) {
 	wallet, _ := ws.walletRepo.GetWalletByUserID(ctx, req.UserID)
 
 	if wallet == nil {
-		err := ws.walletRepo.InsertWallet(ctx, req.Amount, req.UserID)
+		err := ws.walletRepo.InsertWallet(ctx, req)
 		if err != nil {
 			ws.log.Error("UseWallet ERROR: ", err)
-			return entity.ErrorGRPCInternalServer
+			return nil, entity.ErrorGRPCInternalServer
 		}
-
-		return nil
+	} else {
+		err := ws.walletRepo.UpdateWalletByUserID(ctx, req)
+		if err != nil {
+			ws.log.Error("UseWallet ERROR: ", err)
+			return nil, entity.ErrorGRPCInternalServer
+		}
 	}
 
-	err := ws.walletRepo.UpdateWalletByUserID(ctx, req.Amount, req.UserID)
+	walletHistory, err := ws.walletRepo.GetWalletHistoryByReqUseWallet(ctx, req)
 	if err != nil {
 		ws.log.Error("UseWallet ERROR: ", err)
-		return entity.ErrorGRPCInternalServer
+		return nil, entity.ErrorGRPCInternalServer
 	}
-	return nil
+
+	return &walletHistory.WalletHistoryID, nil
 }
 
 func (ws *walletService) GetWalletDetail(ctx context.Context, userId int64) (*entity.GetDetailWallet, error) {
@@ -75,6 +80,7 @@ func (ws *walletService) GetWalletDetail(ctx context.Context, userId int64) (*en
 		WalletID:      wallet.WalletID,
 		UserID:        userId,
 		Amount:        wallet.Amount,
+		OrderID:       wallet.OrderID.Int64,
 		Date:          wallet.Date,
 		HistoryWallet: *walletHistory,
 	}

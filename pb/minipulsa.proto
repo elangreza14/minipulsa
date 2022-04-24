@@ -91,25 +91,30 @@ message CreateOrderRequest {
 service WalletService {
   rpc GetWalletDetail(GetWalletDetailRequest)
       returns (GetWalletDetailResponse) {};
-  rpc UseWallet(UseWalletRequest) returns (BasicResponseCodeMessage) {};
+  rpc UseWallet(UseWalletRequest) returns (UseWalletResponse) {};
 }
 
 message Wallet {
   int64 wallet_id = 1;
   int64 user_id = 2;
-  int64 amount = 3;
-  string date = 4;
+  int64 order_id = 3;
+  int64 amount = 4;
+  string date = 5;
 }
 
 message HistoryWallet {
   int64 last_amount = 1;
-  string date = 2;
+  int64 order_id = 2;
+  string date = 3;
 }
 
 message UseWalletRequest {
   int64 user_id = 1;
   int64 amount = 2;
+  int64 order_id = 3;
 }
+
+message UseWalletResponse { int64 wallet_history_id = 1; }
 
 message GetWalletDetailRequest { int64 user_id = 1; }
 

@@ -421,7 +421,7 @@ var OrderService_ServiceDesc = grpc.ServiceDesc{
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type WalletServiceClient interface {
 	GetWalletDetail(ctx context.Context, in *GetWalletDetailRequest, opts ...grpc.CallOption) (*GetWalletDetailResponse, error)
-	UseWallet(ctx context.Context, in *UseWalletRequest, opts ...grpc.CallOption) (*BasicResponseCodeMessage, error)
+	UseWallet(ctx context.Context, in *UseWalletRequest, opts ...grpc.CallOption) (*UseWalletResponse, error)
 }
 
 type walletServiceClient struct {
@@ -441,8 +441,8 @@ func (c *walletServiceClient) GetWalletDetail(ctx context.Context, in *GetWallet
 	return out, nil
 }
 
-func (c *walletServiceClient) UseWallet(ctx context.Context, in *UseWalletRequest, opts ...grpc.CallOption) (*BasicResponseCodeMessage, error) {
-	out := new(BasicResponseCodeMessage)
+func (c *walletServiceClient) UseWallet(ctx context.Context, in *UseWalletRequest, opts ...grpc.CallOption) (*UseWalletResponse, error) {
+	out := new(UseWalletResponse)
 	err := c.cc.Invoke(ctx, "/minipulsa.WalletService/UseWallet", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -455,7 +455,7 @@ func (c *walletServiceClient) UseWallet(ctx context.Context, in *UseWalletReques
 // for forward compatibility
 type WalletServiceServer interface {
 	GetWalletDetail(context.Context, *GetWalletDetailRequest) (*GetWalletDetailResponse, error)
-	UseWallet(context.Context, *UseWalletRequest) (*BasicResponseCodeMessage, error)
+	UseWallet(context.Context, *UseWalletRequest) (*UseWalletResponse, error)
 	mustEmbedUnimplementedWalletServiceServer()
 }
 
@@ -466,7 +466,7 @@ type UnimplementedWalletServiceServer struct {
 func (UnimplementedWalletServiceServer) GetWalletDetail(context.Context, *GetWalletDetailRequest) (*GetWalletDetailResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetWalletDetail not implemented")
 }
-func (UnimplementedWalletServiceServer) UseWallet(context.Context, *UseWalletRequest) (*BasicResponseCodeMessage, error) {
+func (UnimplementedWalletServiceServer) UseWallet(context.Context, *UseWalletRequest) (*UseWalletResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UseWallet not implemented")
 }
 func (UnimplementedWalletServiceServer) mustEmbedUnimplementedWalletServiceServer() {}

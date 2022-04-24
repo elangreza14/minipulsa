@@ -6,12 +6,14 @@ CREATE OR REPLACE FUNCTION insert_or_update_wallet() RETURNS trigger AS '
     INSERT INTO
         wallet_histories (
             wallet_id,
+            order_id,
             last_amount,
             date
         )
     VALUES
         (
             NEW.wallet_id,
+            NEW.order_id,
             NEW.last_amount,
             NEW.date
         );
