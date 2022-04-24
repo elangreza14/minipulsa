@@ -1,0 +1,99 @@
+openapi: 3.0.1
+info:
+  title: MINIPULSA
+  version: 1.0.0
+  description: minipulsa build with grpc and api gateway
+  contact:
+    email: rezaelangerlangga14@gmail.com
+    name: Muhammad Reza Elang Erlangga
+    url: github.com/elangreza14/minipulsa
+servers:
+  - url: http://localhost:8080
+    description: local
+paths:
+  /authentication/login-register:
+    post:
+      tags:
+        - Authentication
+      description: Api To Login and Register
+      operationId: Authentication.AuthenticationRegisterLogin
+      requestBody:
+        description: "body"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AuthenticationRegisterLogin"
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseHTTP"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseHTTP"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseHTTP"
+      summary: Api to login and register
+
+  /product/list:
+    get:
+      tags:
+        - Product
+      description: Api To Login and Register
+      operationId: Product.ProductList
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseHTTP"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseHTTP"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseHTTP"
+      summary: Api to get minipulsa product
+
+## COMPONENTS
+components:
+  schemas:
+    AuthenticationRegisterLogin:
+      properties:
+        email:
+          type: string
+          example: string@string.com
+        password:
+          type: string
+          example: string
+      required:
+        - email
+        - password
+      type: object
+    ResponseHTTP:
+      properties:
+        code:
+          type: integer
+        data: {}
+        msg:
+          items:
+            type: string
+          type: array
+      type: object

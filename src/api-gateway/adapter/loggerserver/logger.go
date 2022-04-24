@@ -17,5 +17,5 @@ func NewLogger() *logrus.Entry {
 	logrus.SetLevel(logrus.InfoLevel)
 	logrus.SetReportCaller(true)
 
-	return logrus.WithFields(logrus.Fields{})
+	return logrus.WithField("service", "api-gateway")
 }

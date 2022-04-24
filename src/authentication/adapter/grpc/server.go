@@ -23,7 +23,7 @@ func NewAdapter(api port.APIPort) adapter {
 }
 
 func (a adapter) Run() {
-	log.Println("port 9000 ready to listen")
+	log.Println("AUTHENTICATION SERVICE RUNNING ON PORT 9000")
 	listen, err := net.Listen("tcp", ":9000")
 	if err != nil {
 		log.Fatalf("failed to listen on port 9000: %v", err)

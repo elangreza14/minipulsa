@@ -1,4 +1,4 @@
-package authentication
+package port
 
 import (
 	"context"
@@ -8,12 +8,13 @@ import (
 )
 
 type (
-	// UserRepository handle all repository with this 6 method availabel
-	// This Repository is not concern of any adapters. Can be postgres / redis/ mongo/ maria
-	// This Repository also concern about handling all method availabel
-
-	UserRepository interface {
+	AuthRepo interface {
 		LoginRegister(ctx context.Context, in *minipulsa.LoginRegisterRequest, opts ...grpc.CallOption) (*minipulsa.LoginRegisterResponse, error)
 		ValidateToken(ctx context.Context, in *minipulsa.ValidateTokenRequest, opts ...grpc.CallOption) (*minipulsa.ValidateTokenResponse, error)
+	}
+
+	ProductRepo interface {
+		GetProducts(ctx context.Context, in *minipulsa.Empty, opts ...grpc.CallOption) (*minipulsa.GetProductsResponse, error)
+		GetProduct(ctx context.Context, in *minipulsa.GetProductRequest, opts ...grpc.CallOption) (*minipulsa.GetProductResponse, error)
 	}
 )

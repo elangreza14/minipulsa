@@ -5,6 +5,7 @@ import (
 
 	"github.com/elangreza14/minipulsa/api-gateway/adapter/grpc/minipulsa"
 	"github.com/elangreza14/minipulsa/api-gateway/entity"
+	"github.com/elangreza14/minipulsa/api-gateway/port"
 	"github.com/sirupsen/logrus"
 )
 
@@ -14,14 +15,14 @@ type AuthenticationService interface {
 }
 
 type authenticationService struct {
-	AuthenticationServiceClient minipulsa.AuthenticationServiceClient
+	AuthenticationServiceClient port.AuthRepo
 	log                         *logrus.Entry
 }
 
 // NewAuthenticationService is generating new instance
 func NewAuthenticationService(
 	log *logrus.Entry,
-	AuthenticationServiceClient minipulsa.AuthenticationServiceClient,
+	AuthenticationServiceClient port.AuthRepo,
 ) AuthenticationService {
 	return &authenticationService{
 		AuthenticationServiceClient: AuthenticationServiceClient,
@@ -40,8 +41,6 @@ func (us *authenticationService) LoginRegister(ctx context.Context, req entity.H
 		us.log.Logger.Error("LoginRegister ERR: ", err)
 		return "", nil, err
 	}
-	// us.log.Logger.Info("res ", res)
-	// us.log.Logger.Info("err ", err)
 
 	return res.Token, &res.UserId, nil
 }

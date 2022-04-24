@@ -2,12 +2,12 @@ package httpserver
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"os/signal"
 	"syscall"
 
-	authentication "github.com/elangreza14/minipulsa/api-gateway/core/authentication"
-	"github.com/sirupsen/logrus"
+	core "github.com/elangreza14/minipulsa/api-gateway/core"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/compress"
@@ -15,7 +15,7 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/logger"
 )
 
-func HttpServer(authentication authentication.AuthenticationService, log *logrus.Entry) {
+func HttpServer(core core.BaseApp) {
 	app := fiber.New()
 
 	app.Use(logger.New(logger.Config{
@@ -35,8 +35,11 @@ func HttpServer(authentication authentication.AuthenticationService, log *logrus
 		Level: compress.LevelBestCompression,
 	}))
 
-	weightRouter := app.Group("/authentication")
-	NewPublicAuthenticationController(weightRouter, authentication, log)
+	authRouter := app.Group("/authentication")
+	NewPublicAuthenticationController(authRouter, core.As, core.Log)
+
+	productRouter := app.Group("/product")
+	NewPublicProductController(productRouter, core.Ps, core.Log)
 
 	go func() {
 		if err := app.Listen(":8080"); err != nil {
