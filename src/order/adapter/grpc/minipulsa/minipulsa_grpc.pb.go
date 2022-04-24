@@ -19,7 +19,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AuthenticationServiceClient interface {
 	LoginRegister(ctx context.Context, in *LoginRegisterRequest, opts ...grpc.CallOption) (*LoginRegisterResponse, error)
-	ValidateToken(ctx context.Context, in *ValidateTokenRequest, opts ...grpc.CallOption) (*BasicResponseCodeMessage, error)
+	ValidateToken(ctx context.Context, in *ValidateTokenRequest, opts ...grpc.CallOption) (*ValidateTokenResponse, error)
 }
 
 type authenticationServiceClient struct {
@@ -39,8 +39,8 @@ func (c *authenticationServiceClient) LoginRegister(ctx context.Context, in *Log
 	return out, nil
 }
 
-func (c *authenticationServiceClient) ValidateToken(ctx context.Context, in *ValidateTokenRequest, opts ...grpc.CallOption) (*BasicResponseCodeMessage, error) {
-	out := new(BasicResponseCodeMessage)
+func (c *authenticationServiceClient) ValidateToken(ctx context.Context, in *ValidateTokenRequest, opts ...grpc.CallOption) (*ValidateTokenResponse, error) {
+	out := new(ValidateTokenResponse)
 	err := c.cc.Invoke(ctx, "/minipulsa.AuthenticationService/ValidateToken", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -53,7 +53,7 @@ func (c *authenticationServiceClient) ValidateToken(ctx context.Context, in *Val
 // for forward compatibility
 type AuthenticationServiceServer interface {
 	LoginRegister(context.Context, *LoginRegisterRequest) (*LoginRegisterResponse, error)
-	ValidateToken(context.Context, *ValidateTokenRequest) (*BasicResponseCodeMessage, error)
+	ValidateToken(context.Context, *ValidateTokenRequest) (*ValidateTokenResponse, error)
 	mustEmbedUnimplementedAuthenticationServiceServer()
 }
 
@@ -64,7 +64,7 @@ type UnimplementedAuthenticationServiceServer struct {
 func (UnimplementedAuthenticationServiceServer) LoginRegister(context.Context, *LoginRegisterRequest) (*LoginRegisterResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method LoginRegister not implemented")
 }
-func (UnimplementedAuthenticationServiceServer) ValidateToken(context.Context, *ValidateTokenRequest) (*BasicResponseCodeMessage, error) {
+func (UnimplementedAuthenticationServiceServer) ValidateToken(context.Context, *ValidateTokenRequest) (*ValidateTokenResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ValidateToken not implemented")
 }
 func (UnimplementedAuthenticationServiceServer) mustEmbedUnimplementedAuthenticationServiceServer() {}
@@ -262,9 +262,8 @@ var ProductService_ServiceDesc = grpc.ServiceDesc{
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type OrderServiceClient interface {
-	GetOrders(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetOrdersResponse, error)
-	GetOrder(ctx context.Context, in *GetOrderRequest, opts ...grpc.CallOption) (*GetOrderResponse, error)
-	CreateOrder(ctx context.Context, in *CreateOrderRequest, opts ...grpc.CallOption) (*BasicResponseCodeMessage, error)
+	CreateOrder(ctx context.Context, in *CreateOrderRequest, opts ...grpc.CallOption) (*CreateORUpdateOrderResponse, error)
+	UpdateOrder(ctx context.Context, in *UpdateOrderRequest, opts ...grpc.CallOption) (*CreateORUpdateOrderResponse, error)
 }
 
 type orderServiceClient struct {
@@ -275,27 +274,18 @@ func NewOrderServiceClient(cc grpc.ClientConnInterface) OrderServiceClient {
 	return &orderServiceClient{cc}
 }
 
-func (c *orderServiceClient) GetOrders(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetOrdersResponse, error) {
-	out := new(GetOrdersResponse)
-	err := c.cc.Invoke(ctx, "/minipulsa.OrderService/GetOrders", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *orderServiceClient) GetOrder(ctx context.Context, in *GetOrderRequest, opts ...grpc.CallOption) (*GetOrderResponse, error) {
-	out := new(GetOrderResponse)
-	err := c.cc.Invoke(ctx, "/minipulsa.OrderService/GetOrder", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *orderServiceClient) CreateOrder(ctx context.Context, in *CreateOrderRequest, opts ...grpc.CallOption) (*BasicResponseCodeMessage, error) {
-	out := new(BasicResponseCodeMessage)
+func (c *orderServiceClient) CreateOrder(ctx context.Context, in *CreateOrderRequest, opts ...grpc.CallOption) (*CreateORUpdateOrderResponse, error) {
+	out := new(CreateORUpdateOrderResponse)
 	err := c.cc.Invoke(ctx, "/minipulsa.OrderService/CreateOrder", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *orderServiceClient) UpdateOrder(ctx context.Context, in *UpdateOrderRequest, opts ...grpc.CallOption) (*CreateORUpdateOrderResponse, error) {
+	out := new(CreateORUpdateOrderResponse)
+	err := c.cc.Invoke(ctx, "/minipulsa.OrderService/UpdateOrder", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -306,9 +296,8 @@ func (c *orderServiceClient) CreateOrder(ctx context.Context, in *CreateOrderReq
 // All implementations must embed UnimplementedOrderServiceServer
 // for forward compatibility
 type OrderServiceServer interface {
-	GetOrders(context.Context, *Empty) (*GetOrdersResponse, error)
-	GetOrder(context.Context, *GetOrderRequest) (*GetOrderResponse, error)
-	CreateOrder(context.Context, *CreateOrderRequest) (*BasicResponseCodeMessage, error)
+	CreateOrder(context.Context, *CreateOrderRequest) (*CreateORUpdateOrderResponse, error)
+	UpdateOrder(context.Context, *UpdateOrderRequest) (*CreateORUpdateOrderResponse, error)
 	mustEmbedUnimplementedOrderServiceServer()
 }
 
@@ -316,14 +305,11 @@ type OrderServiceServer interface {
 type UnimplementedOrderServiceServer struct {
 }
 
-func (UnimplementedOrderServiceServer) GetOrders(context.Context, *Empty) (*GetOrdersResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetOrders not implemented")
-}
-func (UnimplementedOrderServiceServer) GetOrder(context.Context, *GetOrderRequest) (*GetOrderResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetOrder not implemented")
-}
-func (UnimplementedOrderServiceServer) CreateOrder(context.Context, *CreateOrderRequest) (*BasicResponseCodeMessage, error) {
+func (UnimplementedOrderServiceServer) CreateOrder(context.Context, *CreateOrderRequest) (*CreateORUpdateOrderResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateOrder not implemented")
+}
+func (UnimplementedOrderServiceServer) UpdateOrder(context.Context, *UpdateOrderRequest) (*CreateORUpdateOrderResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateOrder not implemented")
 }
 func (UnimplementedOrderServiceServer) mustEmbedUnimplementedOrderServiceServer() {}
 
@@ -336,42 +322,6 @@ type UnsafeOrderServiceServer interface {
 
 func RegisterOrderServiceServer(s grpc.ServiceRegistrar, srv OrderServiceServer) {
 	s.RegisterService(&OrderService_ServiceDesc, srv)
-}
-
-func _OrderService_GetOrders_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Empty)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(OrderServiceServer).GetOrders(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/minipulsa.OrderService/GetOrders",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OrderServiceServer).GetOrders(ctx, req.(*Empty))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _OrderService_GetOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetOrderRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(OrderServiceServer).GetOrder(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/minipulsa.OrderService/GetOrder",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OrderServiceServer).GetOrder(ctx, req.(*GetOrderRequest))
-	}
-	return interceptor(ctx, in, info, handler)
 }
 
 func _OrderService_CreateOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -392,6 +342,24 @@ func _OrderService_CreateOrder_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _OrderService_UpdateOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateOrderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OrderServiceServer).UpdateOrder(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/minipulsa.OrderService/UpdateOrder",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OrderServiceServer).UpdateOrder(ctx, req.(*UpdateOrderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // OrderService_ServiceDesc is the grpc.ServiceDesc for OrderService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -400,16 +368,12 @@ var OrderService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*OrderServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "GetOrders",
-			Handler:    _OrderService_GetOrders_Handler,
-		},
-		{
-			MethodName: "GetOrder",
-			Handler:    _OrderService_GetOrder_Handler,
-		},
-		{
 			MethodName: "CreateOrder",
 			Handler:    _OrderService_CreateOrder_Handler,
+		},
+		{
+			MethodName: "UpdateOrder",
+			Handler:    _OrderService_UpdateOrder_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -421,7 +385,7 @@ var OrderService_ServiceDesc = grpc.ServiceDesc{
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type WalletServiceClient interface {
 	GetWalletDetail(ctx context.Context, in *GetWalletDetailRequest, opts ...grpc.CallOption) (*GetWalletDetailResponse, error)
-	UseWallet(ctx context.Context, in *UseWalletRequest, opts ...grpc.CallOption) (*BasicResponseCodeMessage, error)
+	UseWallet(ctx context.Context, in *UseWalletRequest, opts ...grpc.CallOption) (*UseWalletResponse, error)
 }
 
 type walletServiceClient struct {
@@ -441,8 +405,8 @@ func (c *walletServiceClient) GetWalletDetail(ctx context.Context, in *GetWallet
 	return out, nil
 }
 
-func (c *walletServiceClient) UseWallet(ctx context.Context, in *UseWalletRequest, opts ...grpc.CallOption) (*BasicResponseCodeMessage, error) {
-	out := new(BasicResponseCodeMessage)
+func (c *walletServiceClient) UseWallet(ctx context.Context, in *UseWalletRequest, opts ...grpc.CallOption) (*UseWalletResponse, error) {
+	out := new(UseWalletResponse)
 	err := c.cc.Invoke(ctx, "/minipulsa.WalletService/UseWallet", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -455,7 +419,7 @@ func (c *walletServiceClient) UseWallet(ctx context.Context, in *UseWalletReques
 // for forward compatibility
 type WalletServiceServer interface {
 	GetWalletDetail(context.Context, *GetWalletDetailRequest) (*GetWalletDetailResponse, error)
-	UseWallet(context.Context, *UseWalletRequest) (*BasicResponseCodeMessage, error)
+	UseWallet(context.Context, *UseWalletRequest) (*UseWalletResponse, error)
 	mustEmbedUnimplementedWalletServiceServer()
 }
 
@@ -466,7 +430,7 @@ type UnimplementedWalletServiceServer struct {
 func (UnimplementedWalletServiceServer) GetWalletDetail(context.Context, *GetWalletDetailRequest) (*GetWalletDetailResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetWalletDetail not implemented")
 }
-func (UnimplementedWalletServiceServer) UseWallet(context.Context, *UseWalletRequest) (*BasicResponseCodeMessage, error) {
+func (UnimplementedWalletServiceServer) UseWallet(context.Context, *UseWalletRequest) (*UseWalletResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UseWallet not implemented")
 }
 func (UnimplementedWalletServiceServer) mustEmbedUnimplementedWalletServiceServer() {}

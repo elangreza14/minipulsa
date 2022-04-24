@@ -49,9 +49,8 @@ message GetProductResponse { Product product = 1; }
 
 // Order service
 service OrderService {
-  rpc GetOrders(Empty) returns (GetOrdersResponse) {};
-  rpc GetOrder(GetOrderRequest) returns (GetOrderResponse) {};
-  rpc CreateOrder(CreateOrderRequest) returns (BasicResponseCodeMessage) {};
+  rpc CreateOrder(CreateOrderRequest) returns (CreateORUpdateOrderResponse) {};
+  rpc UpdateOrder(UpdateOrderRequest) returns (CreateORUpdateOrderResponse) {};
 }
 
 message Order {
@@ -63,29 +62,18 @@ message Order {
   string date = 6;
 }
 
-message HistoryOrder {
-  int64 order_id = 1;
-  int64 wallet_history_id = 2;
-  string status = 3;
-  string date = 4;
-}
-
-message GetOrdersRequest { int64 user_id = 1; }
-
-message GetOrdersResponse { repeated Order orders = 1; }
-
-message GetOrderRequest { int64 order_id = 1; }
-
-message GetOrderResponse {
-  Order order = 1;
-  repeated HistoryOrder history_order = 2;
-}
-
 message CreateOrderRequest {
-  int64 order_id = 1;
-  int64 product_id = 2;
-  int64 user_id = 3;
+  int64 product_id = 1;
+  int64 user_id = 2;
 }
+
+message UpdateOrderRequest {
+  int64 order_id = 1;
+  string status = 2;
+  int64 wallet_history_id = 3;
+}
+
+message CreateORUpdateOrderResponse { Order order = 1; }
 
 // Wallet service
 service WalletService {
