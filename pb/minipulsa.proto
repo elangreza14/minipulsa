@@ -102,9 +102,8 @@ message Wallet {
 }
 
 message HistoryWallet {
-  int64 wallet_id = 1;
-  int64 amount = 2;
-  string date = 3;
+  int64 last_amount = 1;
+  string date = 2;
 }
 
 message UseWalletRequest {
