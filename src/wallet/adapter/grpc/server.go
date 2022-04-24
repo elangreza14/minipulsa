@@ -23,10 +23,10 @@ func NewAdapter(api port.APIPort) adapter {
 }
 
 func (a adapter) Run() {
-	log.Println("port 9001 ready to listen")
-	listen, err := net.Listen("tcp", ":9001")
+	log.Println("PRODUCT SERVICE RUNNING ON PORT 9002")
+	listen, err := net.Listen("tcp", ":9002")
 	if err != nil {
-		log.Fatalf("failed to listen on port 9001: %v", err)
+		log.Fatalf("failed to listen on port 9002: %v", err)
 	}
 
 	walletServer := a
@@ -35,7 +35,7 @@ func (a adapter) Run() {
 	minipulsa.RegisterWalletServiceServer(grpcServer, walletServer)
 
 	if err := grpcServer.Serve(listen); err != nil {
-		log.Fatalf("failed to serve gRPC server over port 9001: %v", err)
+		log.Fatalf("failed to serve gRPC server over port 9002: %v", err)
 	}
 
 }

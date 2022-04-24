@@ -3,7 +3,7 @@ CREATE SEQUENCE IF NOT EXISTS wallet_history_seq;
 CREATE TABLE "wallet_histories" (
   "wallet_history_id" BIGINT DEFAULT nextval('wallet_history_seq') PRIMARY KEY,
   "wallet_id" BIGINT NOT NULL,
-  "order_id" BIGINT UNIQUE,
+  "order_id" BIGINT,
   "last_amount" BIGINT NOT NULL,
   "date" TIMESTAMPTZ NOT NULL
 );

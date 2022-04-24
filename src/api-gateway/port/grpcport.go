@@ -17,4 +17,14 @@ type (
 		GetProducts(ctx context.Context, in *minipulsa.Empty, opts ...grpc.CallOption) (*minipulsa.GetProductsResponse, error)
 		GetProduct(ctx context.Context, in *minipulsa.GetProductRequest, opts ...grpc.CallOption) (*minipulsa.GetProductResponse, error)
 	}
+
+	WalletRepo interface {
+		GetWalletDetail(ctx context.Context, in *minipulsa.GetWalletDetailRequest, opts ...grpc.CallOption) (*minipulsa.GetWalletDetailResponse, error)
+		UseWallet(ctx context.Context, in *minipulsa.UseWalletRequest, opts ...grpc.CallOption) (*minipulsa.UseWalletResponse, error)
+	}
+
+	OrderRepo interface {
+		CreateOrder(ctx context.Context, in *minipulsa.CreateOrderRequest, opts ...grpc.CallOption) (*minipulsa.CreateORUpdateOrderResponse, error)
+		UpdateOrder(ctx context.Context, in *minipulsa.UpdateOrderRequest, opts ...grpc.CallOption) (*minipulsa.CreateORUpdateOrderResponse, error)
+	}
 )

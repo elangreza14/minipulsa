@@ -35,11 +35,19 @@ func HttpServer(core core.BaseApp) {
 		Level: compress.LevelBestCompression,
 	}))
 
+	jwt := NewJwtMiddleware()
+
 	authRouter := app.Group("/authentication")
 	NewPublicAuthenticationController(authRouter, core.As, core.Log)
 
 	productRouter := app.Group("/product")
 	NewPublicProductController(productRouter, core.Ps, core.Log)
+
+	walletRouter := app.Group("/wallet")
+	NewPublicWalletController(walletRouter, core.Ws, core.As, core.Log, jwt)
+
+	orderRouter := app.Group("/order")
+	NewPublicOrderController(orderRouter, core.Os, core.As, core.Log, jwt)
 
 	go func() {
 		if err := app.Listen(":8080"); err != nil {

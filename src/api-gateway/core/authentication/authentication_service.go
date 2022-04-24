@@ -12,6 +12,7 @@ import (
 // AuthenticationService is service layer that handle interaction between core and adapter
 type AuthenticationService interface {
 	LoginRegister(context.Context, entity.HTTPReqPostPutUser) (string, *int64, error)
+	ValidateToken(ctx context.Context, token string) (*int64, error)
 }
 
 type authenticationService struct {
@@ -43,4 +44,17 @@ func (us *authenticationService) LoginRegister(ctx context.Context, req entity.H
 	}
 
 	return res.Token, &res.UserId, nil
+}
+
+func (us *authenticationService) ValidateToken(ctx context.Context, token string) (*int64, error) {
+	grpcReq := &minipulsa.ValidateTokenRequest{
+		Token: token,
+	}
+
+	res, err := us.AuthenticationServiceClient.ValidateToken(ctx, grpcReq)
+	if err != nil {
+		us.log.Logger.Error("LoginRegister ERR: ", err)
+		return nil, err
+	}
+	return &res.UserId, nil
 }

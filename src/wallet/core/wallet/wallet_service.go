@@ -52,6 +52,7 @@ func (ws *walletService) UseWallet(ctx context.Context, req entity.ReqUseWallet)
 		return nil, entity.ErrorGRPCInternalServer
 	}
 
+	ws.log.Info("UseWallet SUCCESS: ")
 	return &walletHistory.WalletHistoryID, nil
 }
 
@@ -85,5 +86,6 @@ func (ws *walletService) GetWalletDetail(ctx context.Context, userId int64) (*en
 		HistoryWallet: *walletHistory,
 	}
 
+	ws.log.Info("GetWalletDetail SUCCESS: ")
 	return res, nil
 }

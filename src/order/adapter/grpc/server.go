@@ -23,10 +23,10 @@ func NewAdapter(api port.ApiPort) adapter {
 }
 
 func (a adapter) Run() {
-	log.Println("port 9001 ready to listen")
-	listen, err := net.Listen("tcp", ":9001")
+	log.Println("AUTHENTICATION SERVICE RUNNING ON PORT 9003")
+	listen, err := net.Listen("tcp", ":9003")
 	if err != nil {
-		log.Fatalf("failed to listen on port 9001: %v", err)
+		log.Fatalf("failed to listen on port 9003: %v", err)
 	}
 
 	orderServer := a
@@ -35,7 +35,7 @@ func (a adapter) Run() {
 	minipulsa.RegisterOrderServiceServer(grpcServer, orderServer)
 
 	if err := grpcServer.Serve(listen); err != nil {
-		log.Fatalf("failed to serve gRPC server over port 9001: %v", err)
+		log.Fatalf("failed to serve gRPC server over port 9003: %v", err)
 	}
 
 }

@@ -72,8 +72,85 @@ paths:
                 $ref: "#/components/schemas/ResponseHTTP"
       summary: Api to get minipulsa product
 
+  /wallet/use:
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - Wallet
+      description: API to Charge UP the minipulsa Wallet
+      operationId: Wallet.WalletUse
+      requestBody:
+        description: "body"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WalletUse"
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseHTTP"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseHTTP"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseHTTP"
+      summary: API to Charge UP the minipulsa Wallet
+
+  /order/process:
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - Order
+      description: API to Process order to buy pulsa
+      operationId: Order.OrderUse
+      requestBody:
+        description: "body"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OrderProcess"
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseHTTP"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseHTTP"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseHTTP"
+      summary: API to Process order to buy pulsa
+
 ## COMPONENTS
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
   schemas:
     AuthenticationRegisterLogin:
       properties:
@@ -96,4 +173,18 @@ components:
           items:
             type: string
           type: array
+      type: object
+    WalletUse:
+      properties:
+        amount:
+          type: integer
+      required:
+        - amount
+      type: object
+    OrderProcess:
+      properties:
+        product_id:
+          type: integer
+      required:
+        - product_id
       type: object

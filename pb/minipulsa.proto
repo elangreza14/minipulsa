@@ -22,10 +22,7 @@ message LoginRegisterResponse {
   int64 user_id = 2;
 }
 
-message ValidateTokenRequest {
-  string token = 1;
-  int64 user_id = 2;
-}
+message ValidateTokenRequest { string token = 1; }
 
 message ValidateTokenResponse { int64 user_id = 1; }
 

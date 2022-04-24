@@ -2,7 +2,9 @@ package core
 
 import (
 	"github.com/elangreza14/minipulsa/api-gateway/core/authentication"
+	"github.com/elangreza14/minipulsa/api-gateway/core/order"
 	"github.com/elangreza14/minipulsa/api-gateway/core/product"
+	"github.com/elangreza14/minipulsa/api-gateway/core/wallet"
 	"github.com/sirupsen/logrus"
 )
 
@@ -12,14 +14,23 @@ type BaseApp struct {
 	Log *logrus.Entry
 	As  authentication.AuthenticationService
 	Ps  product.ProductService
+	Ws  wallet.WalletService
+	Os  order.OrderService
 }
 
-func NewBaseApp(Log *logrus.Entry,
+func NewBaseApp(
+	Log *logrus.Entry,
 	As authentication.AuthenticationService,
-	Ps product.ProductService) BaseApp {
+	Ps product.ProductService,
+	Ws wallet.WalletService,
+	Os order.OrderService,
+
+) BaseApp {
 	return BaseApp{
 		Log: Log,
 		As:  As,
 		Ps:  Ps,
+		Ws:  Ws,
+		Os:  Os,
 	}
 }
