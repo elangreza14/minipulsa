@@ -8,7 +8,7 @@ import (
 )
 
 type (
-	AuthRepo interface {
+	AuthenticationRepo interface {
 		LoginRegister(ctx context.Context, in *minipulsa.LoginRegisterRequest, opts ...grpc.CallOption) (*minipulsa.LoginRegisterResponse, error)
 		ValidateToken(ctx context.Context, in *minipulsa.ValidateTokenRequest, opts ...grpc.CallOption) (*minipulsa.ValidateTokenResponse, error)
 	}

@@ -12,6 +12,7 @@ import (
 // OrderService is service layer that handle interaction between core and adapter
 type OrderService interface {
 	CreateOrder(ctx context.Context, req entity.HTTPReqPostCreateOrder) (string, error)
+	GetOrders(ctx context.Context, req entity.HTTPReqGetOrders) (string, error)
 }
 
 type orderService struct {
@@ -36,14 +37,14 @@ func NewOrderService(
 	}
 }
 
-func (ws orderService) CreateOrder(ctx context.Context, req entity.HTTPReqPostCreateOrder) (string, error) {
+func (os orderService) CreateOrder(ctx context.Context, req entity.HTTPReqPostCreateOrder) (string, error) {
 	grpcReq := &minipulsa.CreateOrderRequest{
 		ProductId: req.ProductID,
 		UserId:    req.UserID,
 	}
-	createOrderResp, err := ws.OrderServiceClient.CreateOrder(ctx, grpcReq)
+	createOrderResp, err := os.OrderServiceClient.CreateOrder(ctx, grpcReq)
 	if err != nil {
-		ws.log.Logger.Error("LoginRegister ERR: ", err)
+		os.log.Logger.Error("LoginRegister ERR: ", err)
 		return "", err
 	}
 
@@ -51,9 +52,9 @@ func (ws orderService) CreateOrder(ctx context.Context, req entity.HTTPReqPostCr
 		ProductId: req.ProductID,
 	}
 
-	product, err := ws.ProductServiceClient.GetProduct(ctx, grpcReqProduct)
+	product, err := os.ProductServiceClient.GetProduct(ctx, grpcReqProduct)
 	if err != nil {
-		ws.log.Logger.Error("LoginRegister ERR: ", err)
+		os.log.Logger.Error("LoginRegister ERR: ", err)
 		return "", err
 	}
 
@@ -63,17 +64,17 @@ func (ws orderService) CreateOrder(ctx context.Context, req entity.HTTPReqPostCr
 		OrderId: createOrderResp.Order.OrderId,
 	}
 
-	resWallet, err := ws.WalletServiceClient.UseWallet(ctx, grpcReqWallet)
+	resWallet, err := os.WalletServiceClient.UseWallet(ctx, grpcReqWallet)
 	if err != nil {
-		// ws.log.Logger.Error("LoginRegister ERR: ", err)
+		// os.log.Logger.Error("LoginRegister ERR: ", err)
 		grpcReq := &minipulsa.UpdateOrderRequest{
 			OrderId:         createOrderResp.Order.OrderId,
 			Status:          "CANCELED",
 			WalletHistoryId: 0,
 		}
-		_, err := ws.OrderServiceClient.UpdateOrder(ctx, grpcReq)
+		_, err := os.OrderServiceClient.UpdateOrder(ctx, grpcReq)
 		if err != nil {
-			ws.log.Logger.Error("LoginRegister ERR: ", err)
+			os.log.Logger.Error("LoginRegister ERR: ", err)
 			return "", err
 		}
 		return "CANCELED", nil
@@ -84,11 +85,21 @@ func (ws orderService) CreateOrder(ctx context.Context, req entity.HTTPReqPostCr
 		Status:          "SUCCESS",
 		WalletHistoryId: resWallet.WalletHistoryId,
 	}
-	_, err = ws.OrderServiceClient.UpdateOrder(ctx, grpcReqUpdate)
+	_, err = os.OrderServiceClient.UpdateOrder(ctx, grpcReqUpdate)
 	if err != nil {
-		ws.log.Logger.Error("LoginRegister ERR: ", err)
+		os.log.Logger.Error("LoginRegister ERR: ", err)
 		return "", err
 	}
 
 	return "SUCCESS", nil
+}
+
+func (os orderService) GetOrders(ctx context.Context, req entity.HTTPReqGetOrders) (string, error) {
+	createOrderResp, err := os.OrderServiceClient.GetOrders(ctx, grpcReq)
+	if err != nil {
+		os.log.Logger.Error("LoginRegister ERR: ", err)
+		return "", err
+	}
+
+	return "", nil
 }

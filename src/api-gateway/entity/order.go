@@ -13,4 +13,8 @@ type (
 		ProductID int64 `json:"product_id" db:"product_id" validate:"required,gt=0"`
 		UserID    int64 `json:"user_id" db:"user_id" validate:"required,gt=0"`
 	}
+
+	HTTPReqGetOrders struct {
+		UserID int64 `json:"user_id" db:"user_id" validate:"required,gt=0"`
+	}
 )

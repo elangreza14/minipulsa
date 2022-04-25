@@ -13,9 +13,14 @@ import (
 )
 
 func main() {
-	config := util.Config{
-		DBDriver: "postgres",
-		DBSource: "postgresql://minipulsa:minipulsa@localhost:5432/order?sslmode=disable",
+	// config := util.Config{
+	// 	DBDriver: "postgres",
+	// 	DBSource: "postgresql://minipulsa:minipulsa@localhost:5432/order?sslmode=disable",
+	// }
+
+	config, err := util.LoadConfig(".")
+	if err != nil {
+		log.Fatal("cannot load config: ", err)
 	}
 
 	conn, err := sql.Open(config.DBDriver, config.DBSource)

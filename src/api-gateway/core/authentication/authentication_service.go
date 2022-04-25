@@ -16,14 +16,14 @@ type AuthenticationService interface {
 }
 
 type authenticationService struct {
-	AuthenticationServiceClient port.AuthRepo
+	AuthenticationServiceClient port.AuthenticationRepo
 	log                         *logrus.Entry
 }
 
 // NewAuthenticationService is generating new instance
 func NewAuthenticationService(
 	log *logrus.Entry,
-	AuthenticationServiceClient port.AuthRepo,
+	AuthenticationServiceClient port.AuthenticationRepo,
 ) AuthenticationService {
 	return &authenticationService{
 		AuthenticationServiceClient: AuthenticationServiceClient,
