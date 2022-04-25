@@ -11,7 +11,7 @@ import (
 
 // OrderService is service layer that handle interaction between core and adapter
 type OrderService interface {
-	CreateOrder(ctx context.Context, req entity.HTTPReqPostCreateOrder) error
+	CreateOrder(ctx context.Context, req entity.HTTPReqPostCreateOrder) (string, error)
 }
 
 type orderService struct {
@@ -36,7 +36,7 @@ func NewOrderService(
 	}
 }
 
-func (ws orderService) CreateOrder(ctx context.Context, req entity.HTTPReqPostCreateOrder) error {
+func (ws orderService) CreateOrder(ctx context.Context, req entity.HTTPReqPostCreateOrder) (string, error) {
 	grpcReq := &minipulsa.CreateOrderRequest{
 		ProductId: req.ProductID,
 		UserId:    req.UserID,
@@ -44,7 +44,7 @@ func (ws orderService) CreateOrder(ctx context.Context, req entity.HTTPReqPostCr
 	createOrderResp, err := ws.OrderServiceClient.CreateOrder(ctx, grpcReq)
 	if err != nil {
 		ws.log.Logger.Error("LoginRegister ERR: ", err)
-		return err
+		return "", err
 	}
 
 	grpcReqProduct := &minipulsa.GetProductRequest{
@@ -54,7 +54,7 @@ func (ws orderService) CreateOrder(ctx context.Context, req entity.HTTPReqPostCr
 	product, err := ws.ProductServiceClient.GetProduct(ctx, grpcReqProduct)
 	if err != nil {
 		ws.log.Logger.Error("LoginRegister ERR: ", err)
-		return err
+		return "", err
 	}
 
 	grpcReqWallet := &minipulsa.UseWalletRequest{
@@ -74,9 +74,9 @@ func (ws orderService) CreateOrder(ctx context.Context, req entity.HTTPReqPostCr
 		_, err := ws.OrderServiceClient.UpdateOrder(ctx, grpcReq)
 		if err != nil {
 			ws.log.Logger.Error("LoginRegister ERR: ", err)
-			return err
+			return "", err
 		}
-		return nil
+		return "CANCELED", nil
 	}
 
 	grpcReqUpdate := &minipulsa.UpdateOrderRequest{
@@ -87,8 +87,8 @@ func (ws orderService) CreateOrder(ctx context.Context, req entity.HTTPReqPostCr
 	_, err = ws.OrderServiceClient.UpdateOrder(ctx, grpcReqUpdate)
 	if err != nil {
 		ws.log.Logger.Error("LoginRegister ERR: ", err)
-		return err
+		return "", err
 	}
 
-	return nil
+	return "SUCCESS", nil
 }

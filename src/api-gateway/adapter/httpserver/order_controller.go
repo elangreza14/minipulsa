@@ -1,6 +1,8 @@
 package httpserver
 
 import (
+	"fmt"
+
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"github.com/sirupsen/logrus"
@@ -67,7 +69,8 @@ func (wc *OrderController) ProcessOrder(ctx *fiber.Ctx) error {
 		ProductID: dataBody.ProductID,
 		UserID:    *res,
 	}
-	err = wc.orderService.CreateOrder(ctx.Context(), *ProcessOrder)
+
+	resOrder, err := wc.orderService.CreateOrder(ctx.Context(), *ProcessOrder)
 
 	if err != nil {
 		wc.log.Error("orderController.ProcessOrder ERROR: ", err)
@@ -80,9 +83,7 @@ func (wc *OrderController) ProcessOrder(ctx *fiber.Ctx) error {
 
 	return ctx.Status(200).JSON(entity.ResponseHTTP{
 		Code:    200,
-		Message: []string{"ok"},
+		Message: []string{fmt.Sprintf("ORDER %v", resOrder)},
 		Data:    nil,
 	})
 }
-
-// wc.log.Info("orderController.ProcessOrder INFO: ", baseUserLocal)
