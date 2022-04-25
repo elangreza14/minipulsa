@@ -75,6 +75,15 @@ const (
 	`
 )
 
+func (q *Queries) InsertWallet(ctx context.Context, req entity.ReqUseWallet) error {
+	_, err := q.db.ExecContext(ctx, insertWallet, req.UserID, req.Amount, req.Amount, req.OrderID)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (q *Queries) GetWalletByUserID(ctx context.Context, userID int64) (*entity.DBWallet, error) {
 	i := &entity.DBWallet{}
 	err := q.db.QueryRowContext(ctx, getWalletByID, userID).Scan(
@@ -94,15 +103,6 @@ func (q *Queries) GetWalletByUserID(ctx context.Context, userID int64) (*entity.
 // ws.walletRepo.UpdateWalletByUserID(ctx, req.Amount, req.UserID)
 func (q *Queries) UpdateWalletByUserID(ctx context.Context, req entity.ReqUseWallet) error {
 	_, err := q.db.ExecContext(ctx, updateWalletByID, req.Amount, req.Amount, req.OrderID, req.UserID)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (q *Queries) InsertWallet(ctx context.Context, req entity.ReqUseWallet) error {
-	_, err := q.db.ExecContext(ctx, insertWallet, req.UserID, req.Amount, req.Amount, req.OrderID)
 	if err != nil {
 		return err
 	}
