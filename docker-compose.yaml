@@ -13,7 +13,157 @@ services:
       - ./docker_postgres_init.sql:/docker-entrypoint-initdb.d/docker_postgres_init.sql
     networks:
       - minipulsa
+  migrate-authentication:
+    image: migrate/migrate
+    volumes:
+      - ./src/authentication/schema:/schema-scripts-authentication
+    command:
+      [
+        "-path",
+        "./schema-scripts-authentication",
+        "-database",
+        "postgresql://minipulsa:minipulsa@database:5432/authentication?sslmode=disable",
+        "-verbose",
+        "up",
+      ]
+    depends_on:
+      - database
+    links:
+      - database
+    restart: on-failure:50
+    networks:
+      - minipulsa
+  authentication:
+    build:
+      context: ./src/authentication
+    environment:
+      - DB_DRIVER=postgres
+      - DB_SOURCE=postgresql://minipulsa:minipulsa@database:5432/authentication?sslmode=disable
+    ports:
+      - 9000:9000
+    networks:
+      - minipulsa
+    restart: always
+    depends_on:
+      - database
+      - migrate-authentication
 
+  migrate-product:
+    image: migrate/migrate
+    volumes:
+      - ./src/product/schema:/schema-scripts-product
+    command:
+      [
+        "-path",
+        "./schema-scripts-product",
+        "-database",
+        "postgresql://minipulsa:minipulsa@database:5432/product?sslmode=disable",
+        "-verbose",
+        "up",
+      ]
+    depends_on:
+      - database
+    links:
+      - database
+    restart: on-failure:50
+    networks:
+      - minipulsa
+  product:
+    build:
+      context: ./src/product
+    environment:
+      - DB_DRIVER=postgres
+      - DB_SOURCE=postgresql://minipulsa:minipulsa@database:5432/product?sslmode=disable
+    ports:
+      - 9001:9001
+    networks:
+      - minipulsa
+    restart: always
+    depends_on:
+      - database
+      - migrate-product
+  migrate-wallet:
+    image: migrate/migrate
+    volumes:
+      - ./src/wallet/schema:/schema-scripts-wallet
+    command:
+      [
+        "-path",
+        "./schema-scripts-wallet",
+        "-database",
+        "postgresql://minipulsa:minipulsa@database:5432/wallet?sslmode=disable",
+        "-verbose",
+        "up",
+      ]
+    depends_on:
+      - database
+    links:
+      - database
+    restart: on-failure:50
+    networks:
+      - minipulsa
+  wallet:
+    build:
+      context: ./src/wallet
+    environment:
+      - DB_DRIVER=postgres
+      - DB_SOURCE=postgresql://minipulsa:minipulsa@database:5432/wallet?sslmode=disable
+    ports:
+      - 9002:9002
+    networks:
+      - minipulsa
+    restart: always
+    depends_on:
+      - database
+      - migrate-wallet
+  migrate-order:
+    image: migrate/migrate
+    volumes:
+      - ./src/order/schema:/schema-scripts-order
+    command:
+      [
+        "-path",
+        "./schema-scripts-order",
+        "-database",
+        "postgresql://minipulsa:minipulsa@database:5432/order?sslmode=disable",
+        "-verbose",
+        "up",
+      ]
+    depends_on:
+      - database
+    links:
+      - database
+    restart: on-failure:50
+    networks:
+      - minipulsa
+  order:
+    build:
+      context: ./src/order
+    environment:
+      - DB_DRIVER=postgres
+      - DB_SOURCE=postgresql://minipulsa:minipulsa@database:5432/order?sslmode=disable
+    ports:
+      - 9003:9003
+    networks:
+      - minipulsa
+    restart: always
+    depends_on:
+      - database
+      - migrate-order
+  api-gateway:
+    build:
+      context: ./src/api-gateway
+    ports:
+      - 8080:8080
+    networks:
+      - minipulsa
+    restart: always
+    depends_on:
+      - database
+      - authentication
+      - product
+      - wallet
+      - order
 networks:
   minipulsa:
     driver: bridge

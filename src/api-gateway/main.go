@@ -17,7 +17,7 @@ import (
 func main() {
 	logBase := loggerserver.NewLogger()
 
-	connAuth, err := grpc.Dial("localhost:9000", grpc.WithInsecure())
+	connAuth, err := grpc.Dial("authentication:9000", grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("Did not connect: %v", err)
 	}
@@ -25,7 +25,7 @@ func main() {
 	authGrpcService := minipulsa.NewAuthenticationServiceClient(connAuth)
 	UserService := authentication.NewAuthenticationService(logBase, authGrpcService)
 
-	connProduct, err := grpc.Dial("localhost:9001", grpc.WithInsecure())
+	connProduct, err := grpc.Dial("product:9001", grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("Did not connect: %v", err)
 	}
@@ -33,7 +33,7 @@ func main() {
 	productGrpcService := minipulsa.NewProductServiceClient(connProduct)
 	ProductService := product.NewProductService(logBase, productGrpcService)
 
-	connWallet, err := grpc.Dial("localhost:9002", grpc.WithInsecure())
+	connWallet, err := grpc.Dial("wallet:9002", grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("Did not connect: %v", err)
 	}
@@ -41,7 +41,7 @@ func main() {
 	walletGrpcService := minipulsa.NewWalletServiceClient(connWallet)
 	WalletService := wallet.NewWalletService(logBase, walletGrpcService)
 
-	connOrder, err := grpc.Dial("localhost:9003", grpc.WithInsecure())
+	connOrder, err := grpc.Dial("order:9003", grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("Did not connect: %v", err)
 	}

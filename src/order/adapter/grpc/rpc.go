@@ -29,6 +29,7 @@ func (a adapter) CreateOrder(ctx context.Context, req *minipulsa.CreateOrderRequ
 	}, nil
 
 }
+
 func (a adapter) UpdateOrder(ctx context.Context, req *minipulsa.UpdateOrderRequest) (*minipulsa.CreateORUpdateOrderResponse, error) {
 	reqApi := &entity.ReqUpdateOrder{
 		OrderID:         req.OrderId,
@@ -50,4 +51,30 @@ func (a adapter) UpdateOrder(ctx context.Context, req *minipulsa.UpdateOrderRequ
 			Date:            res.Date.Format(entity.YMDT),
 		},
 	}, nil
+}
+
+func (a adapter) GetOrders(ctx context.Context, req *minipulsa.GetOrdersRequest) (*minipulsa.GetOrdersResponse, error) {
+
+	res, err := a.api.GetOrders(ctx, req.UserId)
+	if err != nil {
+		return nil, err
+	}
+
+	orders := []*minipulsa.Order{}
+	resBase := *res
+	for i := 0; i < len(resBase); i++ {
+		orders = append(orders, &minipulsa.Order{
+			OrderId:         resBase[i].OrderID,
+			ProductId:       resBase[i].ProductID,
+			UserId:          resBase[i].UserID,
+			WalletHistoryId: resBase[i].WalletHistoryID.Int64,
+			Status:          resBase[i].Status,
+			Date:            resBase[i].Date.Format(entity.YMDT),
+		})
+	}
+	resp := &minipulsa.GetOrdersResponse{
+		Orders: orders,
+	}
+
+	return resp, nil
 }

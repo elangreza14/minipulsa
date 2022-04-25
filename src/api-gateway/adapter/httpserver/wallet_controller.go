@@ -32,6 +32,7 @@ func NewPublicWalletController(
 		jwt:                   jwt,
 	}
 	router.Post("/use", jwt.AuthorizeCurrentToken, handler.UseWallet)
+	router.Get("/detail", jwt.AuthorizeCurrentToken, handler.GetWalletDetail)
 }
 
 func (wc *WalletController) UseWallet(ctx *fiber.Ctx) error {
@@ -81,6 +82,38 @@ func (wc *WalletController) UseWallet(ctx *fiber.Ctx) error {
 		Code:    200,
 		Message: []string{"ok"},
 		Data:    nil,
+	})
+}
+
+func (wc *WalletController) GetWalletDetail(ctx *fiber.Ctx) error {
+	baseUserLocal := ctx.Locals("jwt-token").(string)
+
+	res, err := wc.AuthenticationService.ValidateToken(ctx.Context(), baseUserLocal)
+
+	if err != nil {
+		wc.log.Error("walletController.UseWallet ERROR: ", err)
+		return ctx.Status(500).JSON(entity.ResponseHTTP{
+			Code:    500,
+			Message: []string{err.Error()},
+			Data:    nil,
+		})
+	}
+
+	resp, err := wc.walletService.GetWalletDetail(ctx.Context(), *res)
+
+	if err != nil {
+		wc.log.Error("walletController.UseWallet ERROR: ", err)
+		return ctx.Status(500).JSON(entity.ResponseHTTP{
+			Code:    500,
+			Message: []string{err.Error()},
+			Data:    nil,
+		})
+	}
+
+	return ctx.Status(200).JSON(entity.ResponseHTTP{
+		Code:    200,
+		Message: []string{"ok"},
+		Data:    resp,
 	})
 }
 

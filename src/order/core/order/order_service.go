@@ -12,6 +12,7 @@ type (
 	OrderService interface {
 		CreateOrder(ctx context.Context, req entity.ReqCreateOrder) (*entity.DBOrder, error)
 		UpdateOrder(ctx context.Context, req entity.ReqUpdateOrder) (*entity.DBOrder, error)
+		GetOrders(ctx context.Context, userID int64) (*[]entity.DBOrder, error)
 	}
 
 	orderService struct {
@@ -57,4 +58,17 @@ func (os *orderService) UpdateOrder(ctx context.Context, req entity.ReqUpdateOrd
 	}
 
 	return order, nil
+}
+
+func (os *orderService) GetOrders(ctx context.Context, userID int64) (*[]entity.DBOrder, error) {
+	orders, err := os.orderRepo.GetOrders(ctx, userID)
+	if err != nil {
+		os.log.Logger.Error("CreateOrder ERR: ", err)
+		if err == sql.ErrNoRows {
+			return nil, entity.ErrorGRPCNotFound
+		}
+		return nil, entity.ErrorGRPCInternalServer
+	}
+
+	return orders, nil
 }

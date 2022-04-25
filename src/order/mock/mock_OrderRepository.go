@@ -50,6 +50,21 @@ func (mr *MockOrderRepositoryMockRecorder) GetOrder(arg0, arg1 interface{}) *gom
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOrder", reflect.TypeOf((*MockOrderRepository)(nil).GetOrder), arg0, arg1)
 }
 
+// GetOrders mocks base method.
+func (m *MockOrderRepository) GetOrders(arg0 context.Context, arg1 int64) (*[]entity.DBOrder, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetOrders", arg0, arg1)
+	ret0, _ := ret[0].(*[]entity.DBOrder)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetOrders indicates an expected call of GetOrders.
+func (mr *MockOrderRepositoryMockRecorder) GetOrders(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOrders", reflect.TypeOf((*MockOrderRepository)(nil).GetOrders), arg0, arg1)
+}
+
 // InsertOrder mocks base method.
 func (m *MockOrderRepository) InsertOrder(arg0 context.Context, arg1 entity.ReqCreateOrder, arg2 entity.OrderStatus) (*entity.DBOrder, error) {
 	m.ctrl.T.Helper()

@@ -56,6 +56,26 @@ func (mr *MockOrderRepoMockRecorder) CreateOrder(arg0, arg1 interface{}, arg2 ..
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateOrder", reflect.TypeOf((*MockOrderRepo)(nil).CreateOrder), varargs...)
 }
 
+// GetOrders mocks base method.
+func (m *MockOrderRepo) GetOrders(arg0 context.Context, arg1 *minipulsa.GetOrdersRequest, arg2 ...grpc.CallOption) (*minipulsa.GetOrdersResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "GetOrders", varargs...)
+	ret0, _ := ret[0].(*minipulsa.GetOrdersResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetOrders indicates an expected call of GetOrders.
+func (mr *MockOrderRepoMockRecorder) GetOrders(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOrders", reflect.TypeOf((*MockOrderRepo)(nil).GetOrders), varargs...)
+}
+
 // UpdateOrder mocks base method.
 func (m *MockOrderRepo) UpdateOrder(arg0 context.Context, arg1 *minipulsa.UpdateOrderRequest, arg2 ...grpc.CallOption) (*minipulsa.CreateORUpdateOrderResponse, error) {
 	m.ctrl.T.Helper()

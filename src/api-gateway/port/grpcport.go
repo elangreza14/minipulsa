@@ -26,5 +26,6 @@ type (
 	OrderRepo interface {
 		CreateOrder(ctx context.Context, in *minipulsa.CreateOrderRequest, opts ...grpc.CallOption) (*minipulsa.CreateORUpdateOrderResponse, error)
 		UpdateOrder(ctx context.Context, in *minipulsa.UpdateOrderRequest, opts ...grpc.CallOption) (*minipulsa.CreateORUpdateOrderResponse, error)
+		GetOrders(ctx context.Context, in *minipulsa.GetOrdersRequest, opts ...grpc.CallOption) (*minipulsa.GetOrdersResponse, error)
 	}
 )

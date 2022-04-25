@@ -34,6 +34,7 @@ func NewPublicOrderController(
 		jwt:                   jwt,
 	}
 	router.Post("/process", jwt.AuthorizeCurrentToken, handler.ProcessOrder)
+	router.Get("/detail", jwt.AuthorizeCurrentToken, handler.GetOrders)
 }
 
 func (wc *OrderController) ProcessOrder(ctx *fiber.Ctx) error {
@@ -85,5 +86,39 @@ func (wc *OrderController) ProcessOrder(ctx *fiber.Ctx) error {
 		Code:    200,
 		Message: []string{fmt.Sprintf("ORDER %v", resOrder)},
 		Data:    nil,
+	})
+}
+
+func (wc *OrderController) GetOrders(ctx *fiber.Ctx) error {
+	baseUserLocal := ctx.Locals("jwt-token").(string)
+
+	res, err := wc.AuthenticationService.ValidateToken(ctx.Context(), baseUserLocal)
+
+	if err != nil {
+		wc.log.Error("orderController.ProcessOrder ERROR: ", err)
+		return ctx.Status(500).JSON(entity.ResponseHTTP{
+			Code:    500,
+			Message: []string{err.Error()},
+			Data:    nil,
+		})
+	}
+	getOrdersReq := entity.HTTPReqGetOrders{
+		UserID: *res,
+	}
+	resOrder, err := wc.orderService.GetOrders(ctx.Context(), getOrdersReq)
+	fmt.Println(resOrder)
+	if err != nil {
+		wc.log.Error("orderController.ProcessOrder ERROR: ", err)
+		return ctx.Status(500).JSON(entity.ResponseHTTP{
+			Code:    500,
+			Message: []string{err.Error()},
+			Data:    nil,
+		})
+	}
+
+	return ctx.Status(200).JSON(entity.ResponseHTTP{
+		Code:    200,
+		Message: []string{"OK"},
+		Data:    resOrder,
 	})
 }

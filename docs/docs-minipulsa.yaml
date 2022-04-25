@@ -108,6 +108,35 @@ paths:
                 $ref: "#/components/schemas/ResponseHTTP"
       summary: API to Charge UP the minipulsa Wallet
 
+  /wallet/detail:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Wallet
+      description: API to get detail of wallet
+      operationId: Wallet.WalletDetail
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseHTTP"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseHTTP"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseHTTP"
+      summary: API to get detail of wallet
+
   /order/process:
     post:
       security:
@@ -143,6 +172,35 @@ paths:
               schema:
                 $ref: "#/components/schemas/ResponseHTTP"
       summary: API to Process order to buy pulsa
+
+  /order/detail:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Order
+      description: API to get detail of order
+      operationId: Order.OrderDetail
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseHTTP"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseHTTP"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseHTTP"
+      summary: API to get detail of order
 
 ## COMPONENTS
 components:

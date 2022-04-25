@@ -52,6 +52,38 @@ const (
 		WHERE
 			"order_id" = $1;
 	`
+
+	// getOrders = `
+	// 	SELECT
+	// 		o."order_id",
+	// 		o."product_id",
+	// 		o."user_id",
+	// 		oh."wallet_history_id",
+	// 		oh."status",
+	// 		oh."date"
+	// 	FROM
+	// 		"orders" as o
+	// 	LEFT JOIN
+	// 		"order_histories" AS oh
+	// 	ON
+	// 		o.order_id = oh.order_id
+	// 	WHERE
+	// 		o."user_id" = $1;
+	// `
+
+	getOrders = `
+		SELECT
+			o."order_id",
+			o."product_id",
+			o."user_id",
+			o."wallet_history_id",
+			o."status",
+			o."date"
+		FROM
+			"orders" as o
+		WHERE
+			o."user_id" = $1;
+	`
 )
 
 func (q *Queries) InsertOrder(ctx context.Context, req entity.ReqCreateOrder, status entity.OrderStatus) (*entity.DBOrder, error) {
@@ -113,4 +145,37 @@ func (q *Queries) GetOrder(ctx context.Context, orderID int64) (*entity.DBOrder,
 	}
 
 	return i, nil
+}
+
+func (q *Queries) GetOrders(ctx context.Context, userID int64) (*[]entity.DBOrder, error) {
+	rows, err := q.db.QueryContext(ctx, getOrders, userID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	// o."order_id",
+	// 		o."product_id",
+	// 		o."user_id",
+	// 		oh."wallet_history_id",
+	// 		oh."status",
+	// 		oh."date"
+
+	items := []entity.DBOrder{}
+	for rows.Next() {
+		var i entity.DBOrder
+		if err := rows.Scan(
+			&i.OrderID,
+			&i.ProductID,
+			&i.UserID,
+			&i.WalletHistoryID,
+			&i.Status,
+			&i.Date,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+
+	return &items, nil
 }

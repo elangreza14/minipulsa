@@ -18,7 +18,7 @@ func Test_authenticationService_LoginRegister(t *testing.T) {
 	ctrl := gomock.NewController(t)
 
 	t.Run("err LoginRegister", func(t *testing.T) {
-		authRepoMock := mock.NewMockAuthRepo(ctrl)
+		authRepoMock := mock.NewMockAuthenticationRepo(ctrl)
 		as := authenticationService{
 			AuthenticationServiceClient: authRepoMock,
 			log:                         loggerserver.NewLogger(),
@@ -39,7 +39,7 @@ func Test_authenticationService_LoginRegister(t *testing.T) {
 	})
 
 	t.Run("success", func(t *testing.T) {
-		authRepoMock := mock.NewMockAuthRepo(ctrl)
+		authRepoMock := mock.NewMockAuthenticationRepo(ctrl)
 		as := authenticationService{
 			AuthenticationServiceClient: authRepoMock,
 			log:                         loggerserver.NewLogger(),

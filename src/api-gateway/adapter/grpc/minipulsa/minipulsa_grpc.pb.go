@@ -264,6 +264,7 @@ var ProductService_ServiceDesc = grpc.ServiceDesc{
 type OrderServiceClient interface {
 	CreateOrder(ctx context.Context, in *CreateOrderRequest, opts ...grpc.CallOption) (*CreateORUpdateOrderResponse, error)
 	UpdateOrder(ctx context.Context, in *UpdateOrderRequest, opts ...grpc.CallOption) (*CreateORUpdateOrderResponse, error)
+	GetOrders(ctx context.Context, in *GetOrdersRequest, opts ...grpc.CallOption) (*GetOrdersResponse, error)
 }
 
 type orderServiceClient struct {
@@ -292,12 +293,22 @@ func (c *orderServiceClient) UpdateOrder(ctx context.Context, in *UpdateOrderReq
 	return out, nil
 }
 
+func (c *orderServiceClient) GetOrders(ctx context.Context, in *GetOrdersRequest, opts ...grpc.CallOption) (*GetOrdersResponse, error) {
+	out := new(GetOrdersResponse)
+	err := c.cc.Invoke(ctx, "/minipulsa.OrderService/GetOrders", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // OrderServiceServer is the server API for OrderService service.
 // All implementations must embed UnimplementedOrderServiceServer
 // for forward compatibility
 type OrderServiceServer interface {
 	CreateOrder(context.Context, *CreateOrderRequest) (*CreateORUpdateOrderResponse, error)
 	UpdateOrder(context.Context, *UpdateOrderRequest) (*CreateORUpdateOrderResponse, error)
+	GetOrders(context.Context, *GetOrdersRequest) (*GetOrdersResponse, error)
 	mustEmbedUnimplementedOrderServiceServer()
 }
 
@@ -310,6 +321,9 @@ func (UnimplementedOrderServiceServer) CreateOrder(context.Context, *CreateOrder
 }
 func (UnimplementedOrderServiceServer) UpdateOrder(context.Context, *UpdateOrderRequest) (*CreateORUpdateOrderResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateOrder not implemented")
+}
+func (UnimplementedOrderServiceServer) GetOrders(context.Context, *GetOrdersRequest) (*GetOrdersResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetOrders not implemented")
 }
 func (UnimplementedOrderServiceServer) mustEmbedUnimplementedOrderServiceServer() {}
 
@@ -360,6 +374,24 @@ func _OrderService_UpdateOrder_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _OrderService_GetOrders_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetOrdersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OrderServiceServer).GetOrders(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/minipulsa.OrderService/GetOrders",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OrderServiceServer).GetOrders(ctx, req.(*GetOrdersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // OrderService_ServiceDesc is the grpc.ServiceDesc for OrderService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -374,6 +406,10 @@ var OrderService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateOrder",
 			Handler:    _OrderService_UpdateOrder_Handler,
+		},
+		{
+			MethodName: "GetOrders",
+			Handler:    _OrderService_GetOrders_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

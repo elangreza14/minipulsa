@@ -50,6 +50,21 @@ func (mr *MockOrderServiceMockRecorder) CreateOrder(arg0, arg1 interface{}) *gom
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateOrder", reflect.TypeOf((*MockOrderService)(nil).CreateOrder), arg0, arg1)
 }
 
+// GetOrders mocks base method.
+func (m *MockOrderService) GetOrders(arg0 context.Context, arg1 int64) (*[]entity.DBOrder, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetOrders", arg0, arg1)
+	ret0, _ := ret[0].(*[]entity.DBOrder)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetOrders indicates an expected call of GetOrders.
+func (mr *MockOrderServiceMockRecorder) GetOrders(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOrders", reflect.TypeOf((*MockOrderService)(nil).GetOrders), arg0, arg1)
+}
+
 // UpdateOrder mocks base method.
 func (m *MockOrderService) UpdateOrder(arg0 context.Context, arg1 entity.ReqUpdateOrder) (*entity.DBOrder, error) {
 	m.ctrl.T.Helper()

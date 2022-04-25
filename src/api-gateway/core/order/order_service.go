@@ -12,7 +12,7 @@ import (
 // OrderService is service layer that handle interaction between core and adapter
 type OrderService interface {
 	CreateOrder(ctx context.Context, req entity.HTTPReqPostCreateOrder) (string, error)
-	GetOrders(ctx context.Context, req entity.HTTPReqGetOrders) (string, error)
+	GetOrders(ctx context.Context, req entity.HTTPReqGetOrders) (*[]entity.DBOrder, error)
 }
 
 type orderService struct {
@@ -94,12 +94,27 @@ func (os orderService) CreateOrder(ctx context.Context, req entity.HTTPReqPostCr
 	return "SUCCESS", nil
 }
 
-func (os orderService) GetOrders(ctx context.Context, req entity.HTTPReqGetOrders) (string, error) {
-	createOrderResp, err := os.OrderServiceClient.GetOrders(ctx, grpcReq)
-	if err != nil {
-		os.log.Logger.Error("LoginRegister ERR: ", err)
-		return "", err
+func (os orderService) GetOrders(ctx context.Context, req entity.HTTPReqGetOrders) (*[]entity.DBOrder, error) {
+	reqGrpc := &minipulsa.GetOrdersRequest{
+		UserId: req.UserID,
 	}
 
-	return "", nil
+	createOrderResp, err := os.OrderServiceClient.GetOrders(ctx, reqGrpc)
+	if err != nil {
+		os.log.Logger.Error("LoginRegister ERR: ", err)
+		return nil, err
+	}
+	baseRes := []entity.DBOrder{}
+	for i := 0; i < len(createOrderResp.Orders); i++ {
+		baseRes = append(baseRes, entity.DBOrder{
+			OrderID:         createOrderResp.Orders[i].OrderId,
+			ProductID:       createOrderResp.Orders[i].ProductId,
+			UserID:          createOrderResp.Orders[i].UserId,
+			WalletHistoryID: createOrderResp.Orders[i].WalletHistoryId,
+			Status:          createOrderResp.Orders[i].Status,
+			Date:            createOrderResp.Orders[i].Date,
+		})
+	}
+
+	return &baseRes, nil
 }

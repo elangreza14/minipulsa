@@ -48,6 +48,7 @@ message GetProductResponse { Product product = 1; }
 service OrderService {
   rpc CreateOrder(CreateOrderRequest) returns (CreateORUpdateOrderResponse) {};
   rpc UpdateOrder(UpdateOrderRequest) returns (CreateORUpdateOrderResponse) {};
+  rpc GetOrders(GetOrdersRequest) returns (GetOrdersResponse) {};
 }
 
 message Order {
@@ -58,6 +59,9 @@ message Order {
   string status = 5;
   string date = 6;
 }
+
+message GetOrdersRequest { int64 user_id = 1; }
+message GetOrdersResponse { repeated Order orders = 1; }
 
 message CreateOrderRequest {
   int64 product_id = 1;
