@@ -35,31 +35,33 @@ func (m *MockUserService) EXPECT() *MockUserServiceMockRecorder {
 	return m.recorder
 }
 
-// LoginRegisterUser mocks base method.
-func (m *MockUserService) LoginRegisterUser(arg0 context.Context, arg1 entity.ReqPostPutUser) (*int64, error) {
+// LoginRegister mocks base method.
+func (m *MockUserService) LoginRegister(arg0 context.Context, arg1 entity.ReqPostPutUser) (string, *int64, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "LoginRegisterUser", arg0, arg1)
+	ret := m.ctrl.Call(m, "LoginRegister", arg0, arg1)
+	ret0, _ := ret[0].(string)
+	ret1, _ := ret[1].(*int64)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// LoginRegister indicates an expected call of LoginRegister.
+func (mr *MockUserServiceMockRecorder) LoginRegister(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LoginRegister", reflect.TypeOf((*MockUserService)(nil).LoginRegister), arg0, arg1)
+}
+
+// ValidateToken mocks base method.
+func (m *MockUserService) ValidateToken(arg0 context.Context, arg1 string) (*int64, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ValidateToken", arg0, arg1)
 	ret0, _ := ret[0].(*int64)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// LoginRegisterUser indicates an expected call of LoginRegisterUser.
-func (mr *MockUserServiceMockRecorder) LoginRegisterUser(arg0, arg1 interface{}) *gomock.Call {
+// ValidateToken indicates an expected call of ValidateToken.
+func (mr *MockUserServiceMockRecorder) ValidateToken(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LoginRegisterUser", reflect.TypeOf((*MockUserService)(nil).LoginRegisterUser), arg0, arg1)
-}
-
-// ValidateUser mocks base method.
-func (m *MockUserService) ValidateUser(arg0 context.Context, arg1 string) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ValidateUser", arg0, arg1)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// ValidateUser indicates an expected call of ValidateUser.
-func (mr *MockUserServiceMockRecorder) ValidateUser(arg0, arg1 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ValidateUser", reflect.TypeOf((*MockUserService)(nil).ValidateUser), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ValidateToken", reflect.TypeOf((*MockUserService)(nil).ValidateToken), arg0, arg1)
 }
