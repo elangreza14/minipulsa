@@ -104,21 +104,25 @@ before running this repo make sure port 8080, 9000, 9001, 9002, 9003 is free
 ```
 
 .
-├── docker-compose.yaml
+├── docker-compose.yaml 
 ├── docker_postgres_init.sql
-├── docs
-│ └── docs-minipulsa.yaml
+├── docs  // public api 
+│   └── docs-minipulsa.yaml
 ├── Makefile
 ├── minipulsaarch.jpeg
-├── pb
-│ └── minipulsa.proto
+├── pb // internal protocol buffer
+│   └── minipulsa.proto
 ├── readme.md
-└── src
-├── api-gateway
-├── authentication
-├── order
-├── product
-└── wallet
+└── src // microservices
+    ├── api-gateway
+    ├── authentication
+    ├── order
+    ├── product
+    └── wallet
+
+
+8 directories
+
 
 71 directories, 182 files
 
