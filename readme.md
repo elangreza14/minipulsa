@@ -35,7 +35,8 @@ before running this repo make sure port 8080, 9000, 9001, 9002, 9003 is free
 
 2. hit authentication api to login into system and get the jwt token `localhost:8080/authentication/login-register`
 
-   ```curl -X 'POST' \
+   ```bash
+   curl -X 'POST' \
    'http://localhost:8080/authentication/login-register' \
    -H 'accept: application/json' \
    -H 'Content-Type: application/json' \
@@ -47,14 +48,16 @@ before running this repo make sure port 8080, 9000, 9001, 9002, 9003 is free
 
 3. view product `localhost:8080/product/list`
 
-   ```curl -X 'GET' \
+   ```bash
+   curl -X 'GET' \
    'http://localhost:8080/product/list' \
    -H 'accept: application/json'
    ```
 
 4. top up the wallet and make sure insert token into authorization header `localhost:8080/wallet/use`
 
-   ```curl -X 'POST' \
+   ```bash
+   curl -X 'POST' \
    'http://localhost:8080/wallet/use' \
    -H 'accept: application/json' \
    -H 'Authorization: Bearer {{TOKEN}}' \
@@ -66,7 +69,8 @@ before running this repo make sure port 8080, 9000, 9001, 9002, 9003 is free
 
 5. you can check the wallet with `http://localhost:8080/wallet/detail`
 
-   ```curl -X 'GET' \
+   ```bash
+   curl -X 'GET' \
    'http://localhost:8080/wallet/detail' \
    -H 'accept: application/json' \
    -H 'Authorization: Bearer {{TOKEN}}'
@@ -74,7 +78,8 @@ before running this repo make sure port 8080, 9000, 9001, 9002, 9003 is free
 
 6. finally buy some pulsa, and make sure transaction is success. if wallet is not enough money transaction will be cancel `localhost:8080/order/process`
 
-   ```curl -X 'POST' \
+   ```bash
+   curl -X 'POST' \
    'http://localhost:8080/order/process' \
    -H 'accept: application/json' \
    -H 'Authorization: Bearer {{TOKEN}}' \
@@ -86,7 +91,8 @@ before running this repo make sure port 8080, 9000, 9001, 9002, 9003 is free
 
 7. you can also check transaction with this `localhost:8080/order/detail`
 
-   ```curl -X 'GET' \
+   ```bash
+   curl -X 'GET' \
     'http://localhost:8080/order/detail' \
     -H 'accept: application/json' \
     -H 'Authorization: Bearer {{TOKEN}}'
