@@ -22,22 +22,20 @@ before running this repo make sure port 8080, 9000, 9001, 9002, 9003 is free
 ### API AND GRPC DOCS
 
 1. for arch in `minipulsaarch.jpg` file
-1. for rest api for api gateway in `./docs` folder
+1. for rest api swagger for api gateway in `./docs` folder
 1. for GRPC in `./pb` folder
 
 ### SCENARIO USING MINIPULSA
 
 1. setup environtment and running in docker compose with
 
-   ```
+   ```bash
    docker-compose up -d
-
    ```
 
 2. hit authentication api to login into system and get the jwt token `localhost:8080/authentication/login-register`
 
-   ```
-   curl -X 'POST' \
+   ```curl -X 'POST' \
    'http://localhost:8080/authentication/login-register' \
    -H 'accept: application/json' \
    -H 'Content-Type: application/json' \
@@ -49,16 +47,14 @@ before running this repo make sure port 8080, 9000, 9001, 9002, 9003 is free
 
 3. view product `localhost:8080/product/list`
 
-   ```
-   curl -X 'GET' \
+   ```curl -X 'GET' \
    'http://localhost:8080/product/list' \
    -H 'accept: application/json'
    ```
 
 4. top up the wallet and make sure insert token into authorization header `localhost:8080/wallet/use`
 
-   ```
-   curl -X 'POST' \
+   ```curl -X 'POST' \
    'http://localhost:8080/wallet/use' \
    -H 'accept: application/json' \
    -H 'Authorization: Bearer {{TOKEN}}' \
@@ -70,8 +66,7 @@ before running this repo make sure port 8080, 9000, 9001, 9002, 9003 is free
 
 5. you can check the wallet with `http://localhost:8080/wallet/detail`
 
-   ```
-   curl -X 'GET' \
+   ```curl -X 'GET' \
    'http://localhost:8080/wallet/detail' \
    -H 'accept: application/json' \
    -H 'Authorization: Bearer {{TOKEN}}'
