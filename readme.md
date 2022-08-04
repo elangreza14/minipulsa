@@ -101,8 +101,7 @@ before running this repo make sure port 8080, 9000, 9001, 9002, 9003 is free
 ### this is tree for the project
 
 ```
-
-.
+minipulsa
 ├── docker-compose.yaml 
 ├── docker_postgres_init.sql
 ├── docs  // public api 
@@ -119,10 +118,6 @@ before running this repo make sure port 8080, 9000, 9001, 9002, 9003 is free
     ├── product
     └── wallet
 
-
 8 directories
-
-
 71 directories, 182 files
-
 ```
