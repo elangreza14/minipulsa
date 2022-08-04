@@ -1,6 +1,10 @@
-# MINIPULSA REPO
+# MINIPULSA
 
-created and coded by MUHAMMAD REZA ELANG ERLANGGA
+created and coded by elangreza14
+
+### minipulsa arch
+
+![alt arch](https://github.com/elangreza14/minipulsa/blob/master/minipulsaarch.jpeg)
 
 to repopulate this repo just run
 
